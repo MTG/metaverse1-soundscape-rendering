@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<kml xmlns="http://www.opengis.net/kml/2.2" xmlns:gx="http://www.google.com/kml/ext/2.2" xmlns:kml="http://www.opengis.net/kml/2.2" xmlns:atom="http://www.w3.org/2005/Atom">
+<Document>
+	<name>KMLSoundscapeSchema</name>
+<!--Soundscape CustomData declaration.-->
+<!-- The soundscape generation system uses the kml scheme + 3 Extended Data: soundscape, zone and concept, here defined -->
+<!--	ExtendedData dependency:
+		soundscape -> extend <Folder> (cannot be child of any other element)
+		zone -> extend <Placemark> (cannot be child of any other element)
+		concept -> extend <Placemark> (cannot be child of any other element)  -->
+<!-- in kml Array of value are string type separated by comma with no space. For instance <value>80,90,120,400</value>  -->
+
+<!--kml shema type "soundscape" with 4 Simple Field. This instance must be child of a Folder being child of the Document element, it tells that this KML describe a soundscape-->
+	<Schema name="soundscape" id="soundscape_id">     	 
+	 	<SimpleField type="string" name="name">       
+	    	<displayName><![CDATA[<b>The soundscape</b>]]></displayName>     
+	  	</SimpleField>  
+	 	<SimpleField type="float" name="width">     <!-- Allowed Value: > 0  -->   
+	    	<displayName><![CDATA[<b>The soundscape width</b>]]></displayName>     
+	  	</SimpleField>  
+	 		<SimpleField type="float" name="height">     <!-- Allowed Value: > 0  -->   
+	    	<displayName><![CDATA[<b>The soundscape height</b>]]></displayName>     
+	  	</SimpleField>  
+	 	<SimpleField type="string" name="type">    <!-- Allowed Value: "annotatedDatabase" or "segmentedDatabase" -->    
+     			<!-- case string value = "annotatedDatabase", this soundscape uses annotated on-site recordings database.-->
+     			<!-- case string value = "segmentedDatabase", this soundscape uses the XML soundscape database. -->
+	  	</SimpleField>  
+	</Schema> 
+
+
+<!--kml shema type "zone" with 5 Simple Field-->
+	<Schema name="zone" id="zone_id">     
+	 	<SimpleField type="string" name="zoneGeometry"> <!-- THE REFERENCE SYSTEM IS METER, use this geometry when you don't need kml long lat -->
+												 <!-- Allowed Value: -->
+												 <!-- A 4d Array. Rect -> (x,y) Upper Left corner + (Width, Height) -->
+												 <!-- NOTE: kml Array format, string: <value>x,y,Width,Height</value> for instance <value>0,0,100,50</value> -->
+												 <!--if no geometry. This zone is just a layer, a container--> 
+	  	</SimpleField>
+        <SimpleField type="float" name="gain">            <!--Allowed Value: ]0,32] i.e.: 0.125 = -18dB, 0.25 = -12dB, 0.5 = -6dB, 1 = 0db, 2 = +6dB -->
+	  	</SimpleField>   
+		<SimpleField type="float" name="virtualUnitMeterRatio">   <!-- Allowed Value: > 0. i.e.: 0.25 = 1 virtual unit is 4 meter. Each zone could have different scale-->
+		</SimpleField>    
+  		<SimpleField type="bool" name="closeAmbient">    <!--Allowed Value: 1 = completely closed space -->  
+                                                          <!--If user set the closed Ambient the zone must have a Geometry, or the close Ambient have no effect!-->
+        
+	   	</SimpleField>     
+		<SimpleField type="string" name="annotatedDatabase">       <!--Allowed Value: anyUri --> 
+		</SimpleField>   
+	</Schema> 
+
+<!--Declare the new kml shema type "concept" with 10 Simple Field -->
+	<Schema name="concept" id="concept_id">   
+
+		<SimpleField type="float" name="gain">      <!--Allowed Value: ]0,32] ex: 0.125 = -18dB, 0.25 = -12dB, 0.5 = -6dB, 1 = 0db, 2 = +6dB -->
+	  	</SimpleField>   
+
+		<SimpleField type="string" name="conceptGeometry">      <!-- THE REFERENCE SYSTEM IS METER, use this geometry when you don't need kml long lat -->
+													<!-- Allowed Value: -->
+													<!-- Point source 2D Array <value>x,y</value> -->
+													<!-- Area source, a 4D Array. Rect -> (x,y) Upper Left corner + (Width, Height). <value>x,y,Width,Height</value> -->
+	  	</SimpleField>   
+
+	 	<SimpleField type="string" name="psRandomGeneration">  <!-- Allowed Value: -->
+													<!-- Area source 4D Array. Rect -> (x,y) Upper Left corner + (Width, Height).  <value>x,y,Width, Height</value>--> 
+													<!-- NOTE: psRandomGeneration is a position type, it cannot exist with conceptGeometry, just 1 element allowed-->
+         </SimpleField>  
+		
+		<SimpleField type="bool" name="continuous"> <!-- Allowed Value: 1 = true-->  
+	  	</SimpleField>  
+
+	 	<SimpleField type="int" name="multipleGenerativePath"> <!-- Allowed Value: [1,50] --> 
+        </SimpleField>  
+
+        <SimpleField type="float" name="probability">       <!-- No effect for continuous sound --> 
+                                                         <!-- Allowed Value: [0,1] --> 
+<!-- mapping: Frequency [0,1] to [0,3600] times per hour. In frequency the max 1 means 1 event generation per second (3600 events generation per hour).
+Here the way the mapping between frequency and times per hour behaves: the mapping uses a linear function for values [0,0.8] and an exponential func for value ]0.8,1] 
+ 
+0.001	0.01	0.05	0.1		0.15	0.2		0.25
+1		2		7		13		20		26		32	
+
+0.3		0.35	0.4		0.45	0.5		0.55	0.6
+38		44		51		57		63		69		75	
+
+0.65	0.7		0.75	0.8		0.85	0.9		0.95    1
+81		88		94		100		247		603		1473	3600	
+
+--> 
+     
+        </SimpleField>
+
+        <SimpleField type="int" name="ar">    <!--  Allowed Value: [1, 20] 1 means completely regular sequencing, 20 means very irregular.-->    
+        </SimpleField>
+        
+        <SimpleField type="float" name="recordingDistance">   
+        <!-- Allowed Value: ]0, 50] meter, from ]0, 5[ asking for de-amplify, from ]5, 50] asking for amplify. 5 meter no effect, the standard recording distance-->
+        <!--if the user need a general parameter for all the concept event, anyway both the event recording or a normalisation parameter could also be stored in the database for each sample-->  
+        </SimpleField>
+
+        <SimpleField type="float" name="listenedArea">   
+        <!-- Allowed Value: ]0, 500] meter, from which the system apply a LPF to simulate the perception of distance, default is 60-->  
+        </SimpleField>
+
+        <SimpleField type="string" name="clone">     <!-- Allowed Value: a new position array-->
+													<!-- Point source 2D Array <value>x,y</value> -->
+													<!-- Area source, a 4D Array. Rect -> (x,y) Upper Left corner + (Width, Height). <value>x,y,Width,Height</value> -->
+        <!-- The position type must be the same of the father. Copy all the parameters and events from the concept that has the same name.-->
+        <!-- THUS clone are not allowed to have specific parameters, no further parameter is parsed for clones-->   
+        </SimpleField>   
+
+	</Schema> 
+</Document>
+</kml>

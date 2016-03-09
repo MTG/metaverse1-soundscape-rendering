@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE soundscapeDatabase SYSTEM "soundscapeDatabase.dtd"> 
+<soundscapeDatabase name="Virtual Travel">
+  <soundConcept>
+  	<name>children</name>
+  	<!--segmentation: "start" and "end" are number of frames-->
+    <event URL="http://www.freesound.org/samples/children1.wav" start="0" end="22404" sampleRate="44100"/>
+     <event URL="http://www.freesound.org/samples/children1.wav" start="22404" end="52404" sampleRate="44100"/>
+	<!-- New File-->
+	<event URL="http://www.freesound.org/samples/children2.wav" start="2345" end="23455" sampleRate="44100" recDistance="2"/>
+	<event URL="http://www.freesound.org/samples/children3.wav" start="2345" end="23455" sampleRate="44100" normalisation="0.8"/> 
+    <!--recDistance allowed value: ]0,100] meter -->
+    <!--normalisation allowed value: ]0,32] <!--0.125 = -18dB, 0.25 = -12dB, 0.5 = -6dB, 1 = 0db, 2 = +6dB, 4 = +12dB, 32 = +30dB-->
+	<event URL="http://www.freesound.org/samples/children4.wav" start="0" end="224041" sampleRate="44100"/>
+	<event URL="http://www.freesound.org/samples/children5.wav" start="0" end="224041" sampleRate="44100"/>
+    <event URL="http://www.freesound.org/samples/children6.wav" start="0" end="224041" sampleRate="44100"/>
+  </soundConcept>
+  <soundConcept>
+  	<name>cyclist</name>
+    <event URL="http://www.freesound.org/samples/cyclist1.wav" start="0" end="123816" sampleRate="44100"/>
+    <event URL="http://www.freesound.org/samples/cyclist2.wav" start="0" end="123816" sampleRate="44100"/>
+  </soundConcept>
+  <soundConcept>
+  	<name>footsteps</name>
+    <event URL="http://www.freesound.org/samples/footsteps1.wav" start="0" end="22404" sampleRate="44100"/>
+	<event URL="http://www.freesound.org/samples/footsteps2.wav" start="0" end="34556" sampleRate="44100" recDistance="2"/>
+	<event URL="http://www.freesound.org/samples/footsteps3.wav" start="0" end="34556" sampleRate="44100" recDistance="10"/>
+	<event URL="http://www.freesound.org/samples/footsteps4.wav" start="0" end="240410" sampleRate="44100"/>
+	<event URL="http://www.freesound.org/samples/footsteps5.wav" start="0" end="240410" sampleRate="44100"/>
+    <event URL="http://www.freesound.org/samples/footsteps6.wav" start="0" end="240410" sampleRate="44100"/>
+    <event URL="http://www.freesound.org/samples/footsteps7.wav" start="0" end="240410" sampleRate="44100"/>
+  </soundConcept>
+  <soundConcept>
+  	<name>pigeon</name>
+    <event URL="http://www.freesound.org/samples/pigeon1.wav" start="0" end="224040" sampleRate="44100"/>
+	<event URL="http://www.freesound.org/samples/pigeon2.wav" start="0" end="345560" sampleRate="44100" recDistance="2"/>
+	<event URL="http://www.freesound.org/samples/pigeon3.wav" start="0" end="345560" sampleRate="44100" normalisation="10"/>
+	<event URL="http://www.freesound.org/samples/pigeon4.wav" start="0" end="240410" sampleRate="44100"/>
+	<event URL="http://www.freesound.org/samples/pigeon5.wav" start="0" end="240410" sampleRate="44100"/>
+    <event URL="http://www.freesound.org/samples/pigeon6.wav" start="0" end="240410" sampleRate="44100"/>
+    <event URL="http://www.freesound.org/samples/pigeon7.wav" start="0" end="240410" sampleRate="44100"/>
+    <event URL="http://www.freesound.org/samples/pigeon8.wav" start="0" end="240410" sampleRate="44100"/>
+  </soundConcept>
+  <soundConcept>
+  	<name>fountain</name>
+	<event URL="http://www.freesound.org/samples/fountain0.wav" start="0" end="12381696"/>
+    <event URL="http://www.freesound.org/samples/fountain1.wav" start="0" end="123860"/>
+    <event URL="http://www.freesound.org/samples/fountain2.wav" start="0" end="123810"/>
+    <event URL="http://www.freesound.org/samples/fountain3.wav" start="0" end="123860"/>
+    <event URL="http://www.freesound.org/samples/fountain4.wav" start="0" end="123860"/>   
+    <event URL="http://www.freesound.org/samples/fountain5.wav" start="0" end="123860"/> 
+    <event URL="http://www.freesound.org/samples/fountain8888.wav" start="0" end="123860"/>
+  </soundConcept>
+  <soundConcept>
+  	<name>steps</name>
+    <event URL="http://www.freesound.org/samples/steps1.wav" start="0" end="123800" normalisation="5"/>
+    <event URL="http://www.freesound.org/samples/steps2.wav" start="0" end="123810" normalisation="5"/>
+  </soundConcept>
+  <soundConcept>
+  	<name>squareAtm</name>
+    <event URL="http://www.freesound.org/samples/squareAtm1.wav" start="0" end="1238169"/>
+    <event URL="http://www.freesound.org/samples/squareAtm2.wav" start="0" end="1238169"/>
+    <event URL="http://www.freesound.org/samples/squareAtm3.wav" start="0" end="1238169"/>
+  </soundConcept>
+</soundscapeDatabase>

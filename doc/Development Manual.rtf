@@ -1,0 +1,433 @@
+{\rtf1\ansi\ansicpg1252\cocoartf1038\cocoasubrtf350
+{\fonttbl\f0\fswiss\fcharset0 Helvetica;\f1\fmodern\fcharset0 Courier;\f2\fnil\fcharset0 Menlo-Regular;
+\f3\fnil\fcharset0 Monaco;\f4\froman\fcharset0 TimesNewRomanPSMT;}
+{\colortbl;\red255\green255\blue255;\red166\green23\blue0;\red0\green0\blue191;\red191\green0\blue0;
+\red96\green96\blue96;}
+\paperw11900\paperh16840\margl1440\margr1440\vieww19000\viewh12060\viewkind0
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural\pardirnatural
+
+\f0\fs24 \cf0 ******************************\
+DEVELOPMENT MANUAL\
+******************************\
+\
+Index:\
+1 - Score Formats: KML & XML schema\
+2 - Database requirements\
+3 - Server Requirements\
+4 - git repository data\
+\
+To complete the Soundscape Design application still two modules needs to be developed: a sound design GUI editor and a module to download the selected events from Freesound and manage the database creation:\
+\
+Sound design web GUI editor:\
+	* Create the .xml and .kml annotations following the schema definitions and requirements. \
+	* Assure that the 
+\b soundscape name
+\b0  is correctly stored in both annotations. Grant that the 
+\b concept names
+\b0  are the same in both annotations. \
+\
+Database creation:\
+	* parse the xml soundscapeDatabase annotation\
+	* download samples from Freesound\
+	* creates database folders following the Database requirements.\
+\
+-------------------------------------------------------------------------------------------------------------------\
+1 - Score Formats\
+-------------------------------------------------------------------------------------------------------------------\
+\
+The Soundscape Design SuperCollider application creates a soundscape starting from two annotation file:\
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\ql\qnatural\pardirnatural
+\cf0 \
+a- .kml annotation = space description and sound design parameters: zones & sound concept definition.\
+b- .xml annotation = database of segmented events. \
+\
+SCHEMEs:
+\f1 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural\pardirnatural
+\cf0 \
+******************\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural\pardirnatural
+
+\f0 \cf0 a - KML Soundscape CustomData declaration: KMLSoundscapeSchema.kml\
+\
+	The soundscape generation system uses the kml scheme + 3 Extended Data: soundscape, zone and concept, defined in the ***KMLSoundscapeSchema.kml*** file. \
+	ExtendedData dependency:\
+		soundscape -> extend folder (cannot be child of any other element)\
+		zone -> extend placemark (cannot be child of any other element)\
+		concept -> extend placemark (cannot be child of any other element) \
+\
+---------------------------------------------\
+KML Soundscape CustomData REQUIREMENTS:\
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\ql\qnatural\pardirnatural
+\cf0 \
+In order to be correctly parsed an annotation must follow this requirements: \
+- It must follows the KML requirements.\
+- The soundscape format annotation starts with a <Folder> element child of the main <Document> element. The <Folder> element, in turn, has as child the ExtendedData with schema "#soundscape_id". The SimpleData "name" of ExtendedData with schema "#soundscape_id" MUST contain the soundscape name that is the same of the relative XML annotation.  \
+- The soundscape <Folder> has as child all the zone <Folder> elements. The Folder child element <name> contains the zone name.\
+- The zone Folder has as child all the <Placemark> elements\
+- Each <Placemark> that contains an ExtendedData schema "#zone_id" or "#concept_id" describes the parameters of a zone or a concept. A Placemark can have just one ExtendedData. Use the <Placemark> child element <name> to express the zone or the concept names (the zone name must be the same of the relative Folder).  \
+- Just one ExtendedData schema #zone_id could exist per Folder -->\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural\pardirnatural
+\cf0 \
+\
+---------------------------------------------\
+KML Soundscape CustomData TUTORIAL:\
+\
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\ql\qnatural\pardirnatural
+\cf0 <!--\
+All KML files starts with:\
+- An XML header. No spaces or other characters can appear before this line.\
+- A KML namespace declaration. This is line 2 in every KML 2.2 file.\
+ -->\
+<?xml version="1.0" encoding="UTF-8"?>\
+<kml xmlns="http://www.opengis.net/kml/2.2">\
+\
+<!--Start the document -->\
+<Document>\
+	<name>soundscapeTest</name>	<!--Document name-->\
+	\
+	<!--The soundscape is a Folder (a KML element) that contains all its zones. That Folder element MUST have as child the extensionData with shema "#soundscape_id" -->\
+	<Folder>\
+\
+		<!-- This is the way to instantiate an ExtendedData -->\
+		<ExtendedData>       \
+			<SchemaData schemaUrl="#soundscape_id">         \
+				<SimpleData name="name">Your soundscape name</SimpleData>        \
+				<SimpleData name="width">268</SimpleData>           \
+				<SimpleData name="height">239</SimpleData>        \
+			</SchemaData>  \
+		 </ExtendedData> \
+		<!-- Instance End-->\
+\
+		<!--The same for zone: a child Folder element of the soundscape Folder-->\
+		<Folder>\
+			<name>Beach</name>\
+			<description>The Maspalomas beach of Las Palmas of Gran Canary Islands</description>\
+\
+			<!-- To specify the zone parameters use the extension shema  "#zone_id"  inside a PlaceMark element -->\
+			<Placemark>\
+				<name>Beach</name>	<!-- Just one #zone_id extended data could exist per folder -->				<!-- Instantiate the extended data zone, a PLACEMARK ATTRIBUTE-->\
+				<ExtendedData>       \
+			     	 	<SchemaData schemaUrl="#zone_id">         \
+			        			<SimpleData name="zoneGeometry">0,20,300,600</SimpleData>   \
+						<SimpleData name="gain">2</SimpleData>\
+			    			<SimpleData name="virtualUnitMeterRatio">0.25</SimpleData>\
+			    			<SimpleData name="closeAmbient">1</SimpleData> \
+			      		</SchemaData>     \
+    				</ExtendedData> \
+			</Placemark>\
+			\
+			<!-- Then all the concepts \'85..-->\
+\
+			<Placemark>\
+				<name>Wave</name>			\
+  				<description>Water splashing into sand</description>\
+				<ExtendedData>       \
+			      		<SchemaData schemaUrl="#concept_id"> \
+			      			<SimpleData name="conceptGeometry">100,90</SimpleData>         \
+			        			<SimpleData name="multipleGenerativePath">5</SimpleData>  \
+			    			<SimpleData name="gain">2</SimpleData>\
+			    			<SimpleData name="probability">0.5</SimpleData>\
+			    			<SimpleData name="ar">8</SimpleData>\
+			    			<SimpleData name="recordingDistance">1</SimpleData> \
+			    			<SimpleData name="listenedArea">200</SimpleData>\
+			 		</SchemaData>\
+				</ExtendedData>	    \
+			</Placemark>\
+			<!-- etc -->\
+			<!-- \'85..-->\
+			<Placemark>\
+				<name>Shower</name>			\
+  				<description>Water pouring into wood</description>\
+				<ExtendedData>       \
+			      		<SchemaData schemaUrl="#concept_id">  \
+			      	 		<SimpleData name="conceptGeometry">100,90,30 ,70</SimpleData> \
+			      	 		<SimpleData name="continuous">1</SimpleData>     \
+			        			<SimpleData name="multipleGenerativePath">2</SimpleData>  \
+			      		</SchemaData>     \
+    				</ExtendedData> \
+			</Placemark>\
+<-- close the zone folder \'85..-->\
+	<\\Folder>\
+<-- Finally close the soundscape folder-->\
+<\\Folder>\
+\
+<-- Finally close the document tag and the kml\'85..-->\
+</Document>\
+</kml>\
+\
+\
+\
+-----------------------\
+Possible extension LONGITUDE, LATITUDE and ALTITUDE:\
+\
+<Placemark> also has features with associated geometry, Point (point sound sources) and Polygon (atmosphere, area sound sources). \
+\
+For instance:\
+<Placemark>\
+  <name>Glass</name>\
+  <description>Water pouring into glass</description>\
+  <Point>\
+    <coordinates>90.86948943473118,48.25450093195546,0</coordinates>  <!-- longitude, latitude and altitude -->\
+  </Point>\
+</Placemark>\
+\
+<!-- Polygon example -->\
+\
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\ql\qnatural\pardirnatural
+\cf0 \kerning1\expnd-1\expndtw-4
+  <Placemark>\
+    <name>Water fall</name>\
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\ql\qnatural\pardirnatural
+\cf0 \kerning1\expnd0\expndtw0   <description>Huge amount of water pouring, splashing into rocks</description>\kerning1\expnd-1\expndtw-4
+\
+    <Polygon>\
+      <outerBoundaryIs>\
+        <LinearRing>\
+          <coordinates>\
+            -122.366278,37.818844,30\
+            -122.365248,37.819267,30\
+            -122.365640,37.819861,30\
+            -122.366669,37.819429,30\
+            -122.366278,37.818844,30\
+          </coordinates>\
+        </LinearRing>\
+      </outerBoundaryIs>\
+     </Polygon>\
+  </Placemar\kerning1\expnd0\expndtw0 k>\
+\
+-----------------------\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural\pardirnatural
+\cf0 \
+\
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural\pardirnatural
+
+\f1 \cf0 ******************
+\f0 \
+b - XML soundscapeDatabase sheme: soundscapeDatabase.dtd here in copy:\
+\
+<!DOCTYPE soundscapeDatabase [ \
+	<!ELEMENT soundscapeDatabase (soundConcept+)>\
+	<!ELEMENT soundConcept (name, event+)>\
+	<!ELEMENT name (#PCDATA)>\
+	<!ELEMENT event EMPTY>\
+	\
+	<!ATTLIST soundscapeDatabase name CDATA #REQUIRED>\
+	<!ATTLIST event URL CDATA #REQUIRED>\
+	<!ATTLIST event start CDATA #REQUIRED>\
+	<!ATTLIST event end CDATA #REQUIRED>\
+	<!ATTLIST event sampleRate CDATA #IMPLIED>\
+	<!ATTLIST event recDistance CDATA #IMPLIED>\
+	<!ATTLIST event normalisation CDATA #IMPLIED>	\
+]> \
+\
+It uses path as URL\
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\ql\qnatural\pardirnatural
+
+\b \cf0 Database path as URL: \
+[subprotocol]://[node]/[database path]\
+\
+examples:\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural\pardirnatural
+
+\b0 \cf0 http://www.freesound.org/samples/id101429.aiff\
+http://oaxaca.upf.es/metaverse1/soundscape/beach/children.wav\
+file:///Users/mattia/Soundscape/wave.wav\
+the protocol for local file is file://\
+\
+\
+\
+\
+-------------------------------------------------------------------------------------------------------------------\
+2 - Database requirements\
+-------------------------------------------------------------------------------------------------------------------\
+\
+	* Create the specific new soundscape folder into a defined cache. \
+	* This folder is named as the name attribute of the <
+\f2\fs22 \CocoaLigature0 soundscapeDatabase
+\f0\fs24 \CocoaLigature1 > element found in the xml.\
+	* Into this new soundscape folder, create a new folder per each 
+\f2\fs22 \cf2 \CocoaLigature0 <\cf0 soundConcept\cf2 >
+\f0\fs24 \cf0 \CocoaLigature1  element found in the xml\
+	* Name them with the 
+\f2\fs22 \cf2 \CocoaLigature0 <\cf0 name\cf2 >
+\f0\fs24 \cf0 \CocoaLigature1  element child of 
+\f2\fs22 \cf2 \CocoaLigature0 <\cf0 soundConcept\cf2 > 
+\f0\fs24 \cf0 \CocoaLigature1 element, and download into it all the relative events sound files.\
+	* The sound file must conserve the original file name.\
+	* Put the xml annotation inside the soundscape folder. Just 1 xml annotation file can exist in this folder.\
+\
+Where to put the soundscape folder?\
+Two formats:\
+\
+*You can pass the path of the database folder to the SuperCollider path.\
+* If you don't provide any path the application searches for the soundscape name found in the kml on the general soundscape cache.\
+\
+A SuperCollider patch example is:\
+\
+			
+\f3\fs18 ~kmlAnnotation = aPath;
+\f0\fs24 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural\pardirnatural
+
+\f3\fs18 \cf0 		\
+			k = \cf3 KMLSoundscape\cf0 .new;\
+\
+			k.parse(~kmlAnnotation);
+\f0\fs24  \
+\
+\
+	* The application searches for the general soundscape cache at:\
+		cache = PathName.new(Platform.userAppSupportDir) +/+ PathName.new("soundscapecache");\
+\
+		i.e. the folder named "soundscapecache" inside the SuperCollider AppSupportDir platform based.\
+		\
+		Inside this cache it expects to found a new folder per soundscape named with the soundscape name.\
+		Inside this folder the app searches all its database relative data (xml annotation, concept folders, events sound samples).\
+							\
+						***OR****\
+\
+	* If you pass also the database folder path (i.e. the folder named as the soundscape name )
+\f3\fs18 \
+\
+			\cf4 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardeftab1134\ql\qnatural
+\cf0 			~kmlAnnotation = aPath;\
+			~soundscapeDatabase = aPath;
+\f4\fs24 \
+			
+\f3\fs18 k = \cf3 KMLSoundscape\cf0 .new;
+\f4\fs24 \
+			
+\f3\fs18 k.parse(~kmlAnnotation, ~soundscapeDatabase);
+\f4\fs24 \
+\pard\pardeftab1134\ql\qnatural
+\cf0 \
+
+\f3\fs18 		
+\f4\fs24 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural\pardirnatural
+
+\f0 \cf0  \
+	Inside this folder the app searches all its database relative data (xml annotation, concept folders, events sound samples).\
+\
+\
+\
+-------------------------------------------------------------------------------------------------------------------\
+3 - Server Requirements\
+-------------------------------------------------------------------------------------------------------------------\
+\
+The actual script on the server uses a SoundscapeGenerator.sc object that allow to create a soundscape from a kml-xml annotation or a scd patch.\
+(
+\f3\fs18 on git repository: metaverse/supercollider/scripts/virtual_travel/serverScript.scd
+\f0\fs24 )\
+This allows the Virtual Island Use Case to be compatible, but further soundscape designs should use just the kml-xml format. \
+\
+Use the addSoundscape method on a SoundscapeGenerator object, declaring which type of score you are using: 
+\f3\fs18 \cf5 "scd" 
+\f0\fs24 \cf0 or
+\f3\fs18 \cf5  "kml" 
+\f0\fs24 \cf0 \
+\
+\
+\
+NOTE: \
+*In the  c
+\f3\fs18 \cf5 "scd" 
+\f0\fs24 \cf0 type the scd score must have the variable that store the SoundWorld object as last line so that the score return the soundscape (a SoundWorld) that is store in the active soundscape dictionary SoundscapeGenerator.\
+*Also the scd score must not contain any listener because they are managed by the SoundWorld method addListener, call by the API. \
+*Still the jack global variable declaration is inside the server script. \
+\
+\
+\
+-------------------------------------------------------------------------------------------------------------------\
+4 - git repository data\
+-------------------------------------------------------------------------------------------------------------------\
+\
+The git repository has the supercollider section at\
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural\pardirnatural
+
+\f3\fs18 \cf0 metaverse/supercollider/\
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural\pardirnatural
+
+\f0\fs24 \cf0 \
+Inside it there the source code and the scripts
+\f3\fs18 \
+
+\f0\fs24 \
+*
+\f3\fs18 src/
+\f0\fs24 \
+*
+\f3\fs18 scripts/
+\f0\fs24 \
+\
+------------\
+On src there is the Library SoundscapeDesign developed during the Metaverse project\
+\
+*
+\f3\fs18 SoundWorld -> represents a Soundscape as a collection of MtgModel objects. Manage the Listeners creation. Parse the xml database. Start the generation. 
+\f0\fs24 \
+*
+\f3\fs18 mtgListener -> manages all the Listener functionalities and perform the spatialisation (Synth Def). Need a SoundWorld instance. Has a GUI
+\f0\fs24 \
+*
+\f3\fs18 mtgModel -> represents the zone. Perform the sequencing (Synth Def). Collects functionalities to load database, generate graphs, create concept (ConceptDict)\
+
+\f0\fs24 *
+\f3\fs18 soundConcept -> manages concepts
+\f0\fs24 \
+*
+\f3\fs18 soundEvent -> manages events\
+
+\f0\fs24 *
+\f3\fs18 soundscapeController -> manage the whole Soundscape performance interaction. Has a GUI
+\f0\fs24 \
+*
+\f3\fs18 soundscapeGenerator -> a class useful on the Server to create soundscape just from two annotation formats: kml+xml or scd\
+
+\f0\fs24 *
+\f3\fs18 KMLsoundscape -> manage the KML parsing 
+\f0\fs24 \
+\
+Also there are the kml and xml schemes in the folder\
+\
+*
+\f3\fs18 kml+xml_Schemes\
+\
+
+\f0\fs24 Where you can find the Score Format shemes:\
+	- KML_geometry&soundDesign:\
+		- KMLSoundscapeSchema.kml\
+		- virtualTravel_example.kml\
+	- XML_soundscapeDatabase: \
+		- soundscapeDatabase.dtd\
+		- virtualTravel_example.xml
+\f3\fs18 \
+
+\f0\fs24 \
+\
+--------------\
+On the script there is the Virtual Travel Metaverse use case\
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural\pardirnatural
+
+\f3\fs18 \cf0 virtual_travel/
+\f0\fs24 \
+\
+and the metaverse development material, with some interesting test and:\
+\
+*
+\f3\fs18 MTGSystemGeneration_KML+XML.scd 
+\f0\fs24 is an example (score + database) of a soundscape generation using the kml+xml score. The database is: \
+
+\f3\fs18 Canary Island Virtual Travel/
+\f0\fs24 \
+\
+\
+\
+\
+}

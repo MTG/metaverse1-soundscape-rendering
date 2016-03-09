@@ -1,0 +1,54 @@
+#!/usr/bin/ruby1.8
+require "fileutils"
+
+STREAMING = File.expand_path("/home/metaverse/metaverse/supercollider/scripts/virtual_travel/")
+#METAVERSE = File.expand_path("~/MetaVerse/git/metaverse")
+METAVERSE = File.expand_path("/home/metaverse/metaverse")
+
+def start_daemon(*args)
+  puts args.join(" ")
+  until system(args.join(" ") + "&")
+    sleep(1)
+  end
+end
+
+def main(cmd, argv)
+  case cmd
+    when "start"
+      server_name=`uuidgen`.strip
+      puts "creating server "+server_name
+      server_dir = "run/"+server_name 
+      logs_dir = server_dir+"/logs"
+      pids_dir = server_dir+"/pids"
+      FileUtils.mkdir_p(server_dir)
+      FileUtils.mkdir_p(logs_dir)
+      FileUtils.mkdir_p(pids_dir)
+      # Start jack
+      ENV['JACK_DEFAULT_SERVER'] = server_name
+      start_daemon("jackd", "-n"+server_name,"-ddummy", "-r44100", "-p1024",">",logs_dir+"/jackd.log","&", "echo", "$!", ">", pids_dir+"/jackd.pid")
+      sleep(5)
+      # Start darkice instances
+      (0..3).each { |i|
+      	darkice_config = server_dir+"/darkice-#{i}.cfg"
+      	system("sed -e's/@clientid@/"+i.to_s+"/g' "+File.join(METAVERSE, "darkice/darkice_template.cfg")+">"+darkice_config)
+	start_daemon("darkice", "-c", darkice_config, ">",logs_dir+"/darkice-#{i}.log","&", "echo", "$!", ">", pids_dir+"/darkice-#{i}.pid")
+      }
+      sleep(15)
+      start_daemon("sclang", "-u",argv[1],File.join(STREAMING, argv[0]+".scd"), server_name,">",logs_dir+"/sclang.log","&", "echo", "$!", ">", pids_dir+"/sclang.pid")
+    when "stop"
+      server_name=argv[0]
+      system("kill `cat run/"+server_name+"/pids/sclang.pid`")
+      system("kill `cat run/"+server_name+"/pids/darkice.pid`")
+      system("kill `cat run/"+server_name+"/pids/jackd.pid`")
+    when "killall"
+      system("killall jackd darkice sclang scsynth")
+  end
+end
+
+if ARGV.size < 2 and ARGV[0]!="killall" then
+  puts "Usage: #{File.basename($0)} {start script_name|stop server_name port|killall}"
+  exit(1)
+end
+
+cmd = ARGV.shift
+main(cmd, ARGV)

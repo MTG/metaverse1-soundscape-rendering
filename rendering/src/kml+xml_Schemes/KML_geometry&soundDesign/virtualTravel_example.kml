@@ -1,0 +1,272 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<kml xmlns="http://www.opengis.net/kml/2.2" xmlns:gx="http://www.google.com/kml/ext/2.2" xmlns:kml="http://www.opengis.net/kml/2.2" xmlns:atom="http://www.w3.org/2005/Atom">
+<Document>
+	<name>virtualTravel_example</name>
+<!--We use all the following data that are not defined in KML, so we declare Extended Data, declaring new KML shema -->
+
+<!--kml shema type "soundscape" with 4 Simple Field. This instance must be the first tag of the document, it tells that this KML describe a soundscape-->
+	<Schema name="soundscape" id="soundscape_id">     	 
+	 <SimpleField type="string" name="name">       
+	    <displayName><![CDATA[<b>The soundscape</b>]]></displayName>     
+	  </SimpleField>  
+	 <SimpleField type="float" name="width">        
+	    <displayName><![CDATA[<b>The soundscape width</b>]]></displayName>     
+	  </SimpleField>  
+	 <SimpleField type="float" name="height">        
+	    <displayName><![CDATA[<b>The soundscape height</b>]]></displayName>     
+	  </SimpleField>  
+	 <SimpleField type="string" name="type">        
+	  </SimpleField>  
+	</Schema> 
+
+<!--kml shema type "zone" with 5 Simple Field-->
+	<Schema name="zone" id="zone_id">     
+	 
+ <!-- List of value are string type separated by comma with no space. For instance <value> 80,90,120,400</value>  -->
+	 <SimpleField type="string" name="zoneGeometry">         
+	  </SimpleField>  
+  
+	<SimpleField type="bool" name="closeAmbient">           
+	</SimpleField>    
+
+	<SimpleField type="float" name="gain">       
+	  </SimpleField>   
+
+	<SimpleField type="float" name="virtualUnitMeterRatio">        
+	  </SimpleField>   
+
+	<SimpleField type="string" name="annotatedDatabase">         
+	</SimpleField>   
+
+	</Schema> 
+
+<!--Declare the new kml shema type "concept" with 10 Simple Field -->
+	<Schema name="concept" id="concept_id">   
+
+	<SimpleField type="string" name="conceptGeometry">      
+	</SimpleField>   
+
+	<SimpleField type="float" name="gain">       
+	  </SimpleField>   
+
+	 <SimpleField type="string" name="psRandomGeneration">       
+	 </SimpleField>  
+
+	 <SimpleField type="bool" name="continuous">       
+	 </SimpleField>  
+
+	 <SimpleField type="int" name="multipleGenerativePath">       
+	 </SimpleField>  
+
+	 <SimpleField type="int" name="probability">
+	 </SimpleField>
+
+	 <SimpleField type="int" name="ar">   
+	 </SimpleField>
+
+	 <SimpleField type="float" name="recordingDistance">   
+	 </SimpleField>
+
+	 <SimpleField type="int" name="listenedArea">   
+	 </SimpleField>
+
+	<SimpleField type="bol" name="clone">    
+	</SimpleField>   
+
+	</Schema> 
+
+	<!--First you must create the soundscape folder-->
+	<Folder>
+		<ExtendedData>       
+				      <SchemaData schemaUrl="#soundscape_id">         
+				        <SimpleData name="name">Canary Island Virtual Travel</SimpleData>        
+				    	<SimpleData name="width">256</SimpleData> 
+				    	<SimpleData name="height">256</SimpleData>
+				    </SchemaData>     
+	    </ExtendedData> 
+	    <!-- New zone-->
+		<Folder>
+			<name>square</name>
+			
+	    	<Placemark>
+				<name>square</name> <!-- The parser don't need the name, becase just one #zone_id extended data could exist per folder -->
+				<!-- Instantiate the extended data zone, a PlaceMark Element-->
+			<ExtendedData>       
+				      <SchemaData schemaUrl="#zone_id">
+				      	<SimpleData name="zoneGeometry">80,90,120,400</SimpleData>       
+				    	<SimpleData name="gain">2</SimpleData>
+				    	<SimpleData name="virtualUnitMeterRatio">0.25</SimpleData>
+				    	<SimpleData name="closeAmbient">1</SimpleData>	<!--If you set the closed Ambient the zone must have a Geometry, or the closeAmbient have no effect!-->
+				      </SchemaData>     
+	    	</ExtendedData> 
+			</Placemark>
+	    	
+	    	
+			<Placemark>
+				<name>children</name>
+				<visibility>0</visibility>
+				<LookAt>
+					<longitude>2.195371306106633</longitude>
+					<latitude>41.40362179669086</latitude>
+					<altitude>0</altitude>
+					<heading>0.001129798514983046</heading>
+					<tilt>0</tilt>
+					<range>83.73845751775698</range>
+					<altitudeMode>relativeToGround</altitudeMode>
+					<gx:altitudeMode>relativeToSeaFloor</gx:altitudeMode>
+				</LookAt>
+				<styleUrl>#msn_ylw-pushpin5</styleUrl>
+				
+				<ExtendedData>       
+				      <SchemaData schemaUrl="#concept_id"> 
+				      	<SimpleData name="conceptGeometry">100,90</SimpleData>         
+				        <SimpleData name="multipleGenerativePath">5</SimpleData>  
+				    	<SimpleData name="gain">2</SimpleData>
+				    	<SimpleData name="probability">0.5</SimpleData>
+				    	<SimpleData name="ar">8</SimpleData>
+				    	<SimpleData name="recordingDistance">1</SimpleData> 
+				    	<SimpleData name="listenedArea">200</SimpleData>
+				 </SchemaData>
+				</ExtendedData>	
+			</Placemark>
+			<Placemark>
+				<name>cyclist</name>
+				<ExtendedData>       
+				      <SchemaData schemaUrl="#concept_id">   
+				     	<SimpleData name="psRandomGeneration">100,90, 20, 70</SimpleData>     
+				        <SimpleData name="multipleGenerativePath">5</SimpleData>  
+				    	<SimpleData name="continuous">1</SimpleData> 
+				    	<SimpleData name="gain">2</SimpleData>
+				    	<SimpleData name="probability">0.7</SimpleData>
+				    	<SimpleData name="ar">2</SimpleData>
+				      </SchemaData>     
+	    		</ExtendedData> 
+			</Placemark>
+			<Placemark>
+				<name>squareAtm</name>
+				<ExtendedData>       
+				      <SchemaData schemaUrl="#concept_id">  
+				      	 <SimpleData name="conceptGeometry">100,90,30 ,70</SimpleData> 
+				      	 <SimpleData name="continuous">1</SimpleData>     
+				        <SimpleData name="multipleGenerativePath">2</SimpleData>  
+				      </SchemaData>     
+	    		</ExtendedData> 
+	
+			</Placemark>
+			<Placemark>
+				<name>footsteps</name>
+				<visibility>0</visibility>
+				
+				<ExtendedData>       
+				      <SchemaData schemaUrl="#concept_id">   
+				      	<SimpleData name="conceptGeometry">10,80</SimpleData>   
+				        <SimpleData name="multipleGenerativePath">2</SimpleData>  
+				        <SimpleData name="probability">0.1</SimpleData>
+				      </SchemaData>     
+	    		</ExtendedData> 
+				
+			</Placemark>
+			
+			<Placemark>
+				<name>footsteps</name>
+				<ExtendedData>       
+				      <SchemaData schemaUrl="#concept_id">        
+				        <SimpleData name="clone">30,80</SimpleData> <!-- This means this Placemark is a clone of a previous defined concept -->
+				        									<!-- A clone cannot have different parameters from the father, apart position -->     
+				      </SchemaData>     
+	    		</ExtendedData> 
+			</Placemark>
+			
+			<Placemark>
+				<name>footsteps</name>
+				<ExtendedData>       
+				      <SchemaData schemaUrl="#concept_id">         
+				        <SimpleData name="clone">90,80</SimpleData> <!-- This means this Placemark is a clone of a previous defined concept -->   
+				      </SchemaData>     
+	    		</ExtendedData> 
+			</Placemark>
+					
+			<Placemark>
+				<name>fountain</name>
+				<ExtendedData> 
+					<SchemaData schemaUrl="#concept_id">    
+						<SimpleData name="conceptGeometry">10,80</SimpleData>             
+	
+				    	<SimpleData name="ar">20</SimpleData>
+				 	</SchemaData> 
+				</ExtendedData> 
+			</Placemark>
+			
+			<Placemark>
+				<name>pigeon</name>
+				
+				<ExtendedData> 
+					<SchemaData schemaUrl="#concept_id">    
+						<SimpleData name="conceptGeometry">55,80</SimpleData>             
+				    	<SimpleData name="ar">20</SimpleData>
+				    	<SimpleData name="multipleGenerativePath">12</SimpleData>
+				    	<SimpleData name="probability">0.44</SimpleData>
+				 	</SchemaData> 
+				</ExtendedData> 
+	
+			</Placemark>
+			
+			
+			<Placemark>
+				<name>steps</name>
+				
+				<ExtendedData> 
+					<SchemaData schemaUrl="#concept_id">                
+				    	<SimpleData name="ar">20</SimpleData>
+				    	<SimpleData name="multipleGenerativePath">3</SimpleData>
+				    	<SimpleData name="probability">0.31</SimpleData>
+				    	<SimpleData name="psRandomGeneration">55,80,80,10</SimpleData>   
+				 	</SchemaData> 
+				</ExtendedData> 
+	
+			</Placemark>	
+		</Folder>
+		<!-- Second zone-->
+		<Folder>
+			<name>beach</name>
+			<Placemark>
+				<name>beach</name>
+				<ExtendedData>       
+					      <SchemaData schemaUrl="#zone_id">         
+					        <SimpleData name="zoneGeometry">0,100,80,100</SimpleData>  
+					    	<SimpleData name="gain">0.5</SimpleData>
+					    	<SimpleData name="virtualUnitMeterRatio">0.9</SimpleData>
+					      </SchemaData>     
+		    	</ExtendedData> 
+			</Placemark>
+			
+			<Placemark>
+				<name>pigeon</name>
+				
+				<ExtendedData> 
+					<SchemaData schemaUrl="#concept_id">    
+						<SimpleData name="conceptGeometry">0,8</SimpleData>             
+				    	<SimpleData name="ar">6</SimpleData>
+				    	<SimpleData name="multipleGenerativePath">12</SimpleData>
+				    	<SimpleData name="probability">0.44</SimpleData>
+				 	</SchemaData> 
+				</ExtendedData> 
+	
+			</Placemark>
+			<Placemark>
+				<name>steps</name>
+				
+				<ExtendedData> 
+					<SchemaData schemaUrl="#concept_id">              
+				    	<SimpleData name="ar">20</SimpleData>
+				    	<SimpleData name="multipleGenerativePath">3</SimpleData>
+				    	<SimpleData name="probability">0.31</SimpleData>
+				    	<SimpleData name="psRandomGeneration">0,0,80,10</SimpleData>   
+				 	</SchemaData> 
+				</ExtendedData> 
+	
+			</Placemark>
+		</Folder>
+	</Folder>
+</Document>
+</kml>

@@ -1,0 +1,14 @@
+<!DOCTYPE soundscapeDatabase [ 
+	<!ELEMENT soundscapeDatabase (soundConcept+)>
+	<!ELEMENT soundConcept (name, event+)>
+	<!ELEMENT name (#PCDATA)>
+	<!ELEMENT event EMPTY>
+	
+	<!ATTLIST soundscapeDatabase name CDATA #REQUIRED>
+	<!ATTLIST event URL CDATA #REQUIRED>
+	<!ATTLIST event start CDATA #REQUIRED>
+	<!ATTLIST event end CDATA #REQUIRED>
+	<!ATTLIST event sampleRate CDATA #IMPLIED>
+	<!ATTLIST event recDistance CDATA #IMPLIED>
+	<!ATTLIST event normalisation CDATA #IMPLIED>	
+]> 

@@ -1,0 +1,93 @@
+{\rtf1\ansi\ansicpg1252\cocoartf1038\cocoasubrtf350
+{\fonttbl\f0\fswiss\fcharset0 Helvetica;\f1\fmodern\fcharset0 Courier;}
+{\colortbl;\red255\green255\blue255;\red0\green90\blue225;}
+\paperw11900\paperh16840\margl1440\margr1440\vieww20240\viewh11560\viewkind0
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\ql\qnatural\pardirnatural
+
+\f0\fs24 \cf0 Last Jordi review\
+\pard\pardeftab720\ql\qnatural
+
+\f1 \cf0 I checked again the issue with the geographical distance conversion. It seems that the easiest formula is the "Spherical Earth projected to a plane", as described in {\field{\*\fldinst{HYPERLINK "http://en.wikipedia.org/wiki/Geographical_distance"}}{\fldrslt \cf2 \ul \ulc2 http://en.wikipedia.org/wiki/Geographical_distance}}\
+\
+I tested it on GoogleMaps, and compared to the distance measure that is implemented in:  {\field{\*\fldinst{HYPERLINK "http://maps.google.com/maps?showlabs=1"}}{\fldrslt \cf2 \ul \ulc2 http://maps.google.com/maps?showlabs=1}}\
+The code in python is below. Probably  the conversion from degrees to radians was missing before.\
+\
+here the python code:\
+\
+>>> l1 = 41.34944300000\
+>>> lg1 = 1.700293000\
+>>> l2 = 41.348989\
+>>> lg2 = 1.700006\
+>>> R = 6371009\
+>>> d = R * np.sqrt( ((l1*np.pi / 180) - (l2*np.pi/180))**2  + ((lg1*np.pi/180) - (lg2*np.pi/180))**2 )\
+(np refers to the numpy package for numerical computaiton)\
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\ql\qnatural\pardirnatural
+
+\f0 \cf0 \
+\
+\
+How to compute distance in longitude latitude?\
+\
+For its reference system, KML uses 3D geographic coordinates: longitude, latitude and altitude, in that order. The longitude, latitude components are as defined by the World Geodetic System of 1984 (WGS84)\
+\
+http://en.wikipedia.org/wiki/Geographic_coordinate_system  ref (A_Guide_to_Coordinate_Systems_in_Great_Britain)\
+\
+On the GRS80 (GSM model) or WGS84 spheroid at sea level at the equator, one latitudinal second measures 30.715 meters, one latitudinal minute is 1843 metres and one latitudinal degree is 110.6 kilometres. The circles of longitude, meridians, meet at the geographical poles, with the west-east width of a second naturally decreasing as latitude increases. On the equator at sea level, one longitudinal second measures 30.92 metres, a longitudinal minute is 1855 metres and a longitudinal degree is 111.3 kilometres. At 30\'b0 a longitudinal second is 26.76 metres, at Greenwich (51\'b0 28' 38" N) 19.22 metres, and at 60\'b0 it is 15.42 metres.\
+\
+The width of one longitudinal degree at latitude \uc0\u8706  can be calculated by this formula (to get the width per minute and second, divide by 60 and 3600, respectively):\
+\
+                    \\frac\{\\pi\}\{180\}\\cos \\phi (M_r) \\!  		pi/180*a*cos(\uc0\u8706 )(Mr)\
+\
+where Earth's average meridional radius Mr approximately equals 6,367,449 m. Due to the average radius value used, this formula is of course not precise. A better approximation of a longitudinal degree at latitude \uc0\u8706  is\
+\
+                    \\frac\{\\pi\}\{180\}a \\cos \\beta \\,\\! 			pi/180*a*cos(\'b5)\
+\
+where Earth's equatorial radius a equals 6,378,137 m and " tan \'b5 =  b/a tan \uc0\u8706   "  for the GRS80 and WGS84 spheroids, b/a calculates to be 0.99664719. (\\scriptstyle\{\\beta\}\\,\\! is known as the parametric or reduced latitude).\
+\
+Aside from rounding, this is the exact distance along a parallel of latitude; getting the distance along the shortest route will be more work, but those two distances are always within 0.6 meter of each other if the two points are one degree of longitude apart.\
+\
+\
+Latitude	 	Town 		Degree 	Minute 	Second 	\'b10.0001\'b0\
+60\'b0	 		SaintPetersburg 55.65 km 0.927 km 	15.42m 	5.56m\
+51\'b0 28' 38" N 	Greenwich 	69.29 km 	1.155 km 	19.24m 	6.93m\
+45\'b0 			Bordeaux 		78.7 km 	1.31 km 	21.86m 	7.87m\
+30\'b0 			New Orleans 	96.39 km 	1.61 km 	26.77m 	9.63m\
+0\'b0 			Quito 		111.3 km 	1.855 km 	30.92m 	11.13m\
+\
+So what we need to implement is \
+\
+differential m  = (pi/180*a*cos(\'b5)) / 3600 - differenziale in secondi di latitude. \
+\
+where tan(\'b5) =  0.99664719 * tan(latitude) \
+\
+\
+Distance formula \
+http://www.movable-type.co.uk/scripts/latlong.html\
+\
+All these formul\'e6 are for calculations on the basis of a spherical earth (ignoring ellipsoidal effects) \'96 which is accurate enoug* for most purposes\'85 [In fact, the earth is very slightly ellipsoidal; using a spherical model gives errors typically up to 0.3% \'96 see notes for further details].\
+\
+\
+http://en.wikipedia.org/wiki/Geographical_distance\
+\
+Calculating the distance between geographical coordinates is based on some level of abstraction; it does not provide an exact distance, which is unattainable if one attempted to account for every irregularity in the surface of the earth.[1] Common abstractions for the surface between two geographic points are:\
+\
+    * Flat surface;\
+    * Spherical surface;\
+    * Ellipsoidal surface.\
+\
+All abstractions above ignore changes in elevation.\
+A planar approximation for the surface of the earth may be useful over small distances. The accuracy of distance calculations using this approximation become increasingly inaccurate as:\
+\
+    * The separation between the points becomes greater;\
+    * A point becomes closer to a geographic pole.\
+\
+D = distance\
+R = raggio terra = 6,371.009 kilometers\
+\
+\uc0\u8710 \u8706  = differential lat in radians -> longitude in degree * \u960  / 180 -> in KML they are already in degree\
+\uc0\u8710 \'df = differential long in radians\
+D = R \uc0\u8730  (\u8710 \u8706 )^2 + (\u8710 \'df)^2\
+\
+GeographicLib provides a utility Geod (with source code) for solving direct and inverse geodesic problems. Compared to Vincenty's_formulae, this is about 1000 times more accurate (error = 15 nm) and the inverse solution is complete\
+\
+http://geographiclib.sourceforge.net/html/geodesic.html }

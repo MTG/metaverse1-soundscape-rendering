@@ -1,0 +1,36 @@
+# This is really a Pupppet configuration file, but serves as a list
+# of packages that you must install for running the Metaverse project.
+#
+class metaverse_frontend {
+    package { ["python-twisted-core", "python-twisted-bin",
+        "python-twisted-web"]:
+            ensure => installed,
+    }
+    package { "python-flup": ensure => installed }
+
+    package { "python-mysqldb":
+             ensure => installed,
+    }
+    package { ["php5-cli", "php5-cgi", "php5-imagick", "php5-gd"]:
+            ensure => installed,
+    }
+    package { ["php5-mysql", "php5-sqlite", "php5-pgsql"]:
+        ensure => installed,
+    }
+    python::pip { "txosc==0.2.0":
+        creates => "txosc-0.2.0.egg-info",
+    }
+    package { "icecast2": ensure => installed }
+
+    include nginx
+    include mysql::server
+    include supervisord
+    supervisord::config { ["udp_proxy.ini", "php.ini", "metaverse1.ini"]: }
+}
+
+class metaverse_backend {
+    include supercollider
+
+    # Package from Debian-multimedia.
+    package { "darkice-full":    ensure => installed, }
+}

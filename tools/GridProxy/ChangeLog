@@ -1,0 +1,9 @@
+# GridProxy ChangeLog
+
+## 0.2.6
+
+* **[OSX]** Kill GridProxy when SecondLife exits
+
+## 0.2.5
+
+* Fix string formatting for floating point numbers to be locale independent; this bug caused position update to fail when the system used a different locale than C or US

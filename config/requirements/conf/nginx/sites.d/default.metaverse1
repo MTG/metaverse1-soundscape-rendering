@@ -1,0 +1,36 @@
+# Project Metaverse1.
+# Contact: Jordi Janer, Gerard Roma.
+location /metaverse1/admin-media/ {
+    alias /home/metaverse1/metaverse1/django/contrib/admin/media/ ;
+    autoindex on ;
+}
+
+location /metaverse1/media/ {
+     alias /home/metaverse1/metaverse1/media/ ;
+     autoindex on ;
+}
+
+
+#rewrite ^(/metaverse1/freesound-search)$ $1/ break ;
+
+location /metaverse1/freesound-search/ {
+    root /home;
+
+    fastcgi_pass   127.0.0.1:3010;
+    fastcgi_index  index.php;
+    include /etc/nginx/fastcgi_params;
+    fastcgi_param  SCRIPT_FILENAME $document_root$fastcgi_script_name;
+}
+
+location /metaverse1/ {
+    include fastcgi_params;
+    if ($uri ~ ^/metaverse1(.*)?) {
+       set $path_url $1 ;
+    }
+    #fastcgi_param PATH_INFO $fastcgi_script_name;
+    #fastcgi_param  SCRIPT_NAME "" ;
+    fastcgi_param  PATH_INFO  $path_url ;
+    fastcgi_param  SCRIPT_NAME /metaverse1 ;
+    fastcgi_pass   127.0.0.1:3000 ;
+}
+
