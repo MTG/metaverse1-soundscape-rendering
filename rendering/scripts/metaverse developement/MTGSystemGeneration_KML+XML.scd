@@ -2,9 +2,10 @@
 
 
 (
+
 //REPLACE THE PATH pass the kml annotation path and the dabase folder path
-~kmlAnnotation = "/Users/mattia/git_workspace/metaverse/supercollider/scripts/metaverse developement/Canary Island Virtual Travel/virtualTravel_example.kml";
-~soundscapeDatabase = "/Users/mattia/git_workspace/metaverse/supercollider/scripts/metaverse developement/Canary Island Virtual Travel";
+~kmlAnnotation = "/Users/jjaner/XSource/MTG/metaverse1-soundscape-rendering/rendering/scripts/metaverse developement/Canary Island Virtual Travel/virtualTravel_example.kml";
+~soundscapeDatabase = "/Users/jjaner/XSource/MTG/metaverse1-soundscape-rendering/rendering/scripts/metaverse developement/Canary Island Virtual Travel";
 k = KMLSoundscape.new;
 
 k.parse(~kmlAnnotation, ~soundscapeDatabase);

@@ -27,15 +27,21 @@ Here's a short repository overview:
 
 The development of the code in this repository finished in 2011. In May 2016, the Soundscape Rendering application was tested again on OSX (OSX 10.11.4). To run the application on Supercollider, we followed a number of steps:  
 
-|1- Install  SuperCollider OSX version 3.4, (SuperCollider-3.4-10.6.dmg) https://sourceforge.net/projects/supercollider/files/Mac%20OS%20X/3.4/SuperCollider-3.4-10.6.dmg/download |
-|2- Copy  SwingOSC library (from 3.4 downloaded package) to the SC Extensions folder  (/Library/Application Support/SuperCollider) |
-|3- Copy the following libraries from the Github repository to the SC Extensions folder  (/Library/Application Support/SuperCollider):
+1- Install  SuperCollider OSX version 3.4, (SuperCollider-3.4-10.6.dmg) https://sourceforge.net/projects/supercollider/files/Mac%20OS%20X/3.4/SuperCollider-3.4-10.6.dmg/download 
+
+2- Copy  SwingOSC library (from 3.4 downloaded package) to the SC Extensions folder  (/Library/Application Support/SuperCollider)
+
+3- Copy the following libraries from the Github repository to the SC Extensions folder  (/Library/Application Support/SuperCollider):
 /metaverse1-soundscape-rendering/rendering/src/SoundscapeDesign
 /metaverse1-soundscape-rendering/rendering/src/Geography, 
-/metaverse1-soundscape-rendering/rendering/src/X3D |
-|4- Install quarks: XML, AmbIEM, UnitTests |
-|5- Open SC and check all libraries are compiled. |
-|6- Open script for Soundscape Virtual Travel test in the Github repository: 
-/metaverse1-soundscape-rendering/rendering/scripts/metaverse developement/MTGSystemGeneration_KML+XML.scd |
+/metaverse1-soundscape-rendering/rendering/src/X3D
+
+4- Install quarks: 
+XML, AmbIEM, UnitTests
+
+5- Open SC and check all libraries are compiled.
+
+6- Open script for Soundscape Virtual Travel test in the Github repository:
+/metaverse1-soundscape-rendering/rendering/scripts/metaverse developement/MTGSystemGeneration_KML+XML.scd 
 
 
